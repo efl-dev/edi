@@ -1331,11 +1331,11 @@ _edi_menu_setup(Evas_Object *win)
    elm_menu_item_add(menu, menu_it, edi_theme_icon_path_get("window-new"), _("New Window"), _edi_menu_view_open_window_cb, NULL);
    elm_menu_item_add(menu, menu_it, edi_theme_icon_path_get("object-flip-horizontal"), _("New Panel"), _edi_menu_view_new_panel_cb, NULL);
    elm_menu_item_add(menu, menu_it, edi_theme_icon_path_get("object-flip-vertical"), _("Split View"), _edi_menu_view_split_cb, NULL);
-   elm_menu_item_separator_add(menu, menu_it);
-   elm_menu_item_add(menu, menu_it, edi_theme_icon_path_get("edit-find"), _("Open Tasks"), _edi_menu_view_tasks_cb, NULL);
 
    if (edi_project_mode_get())
      {
+        elm_menu_item_separator_add(menu, menu_it);
+        elm_menu_item_add(menu, menu_it, edi_theme_icon_path_get("edit-find"), _("Open Tasks"), _edi_menu_view_tasks_cb, NULL);
         menu_it = elm_menu_item_add(menu, NULL, NULL, _("Build"), NULL, NULL);
         _edi_menu_build = elm_menu_item_add(menu, menu_it, edi_theme_icon_path_get("system-run"), _("Build"), _edi_menu_build_cb, NULL);
         _edi_menu_test = elm_menu_item_add(menu, menu_it, edi_theme_icon_path_get("media-record"), _("Test"), _edi_menu_test_cb, NULL);
