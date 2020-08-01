@@ -37,10 +37,60 @@ edi_content_diff_add(Evas_Object *parent, Edi_Mainview_Item *item)
    return diff;
 }
 
+static const char *_image_path = NULL;
+
+static void
+_item_menu_edit_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   const char *program = data;
+   const char *path = _image_path;
+
+   if (path)
+     ecore_exe_run(eina_slstr_printf("%s %s", program, path), NULL);
+   _image_path = NULL;
+}
+
+static Evas_Object *
+_image_menu_create(const char *path)
+{
+   Elm_Object_Item *menu_it, *menu_it2;
+   Evas_Object *menu;
+
+   _image_path = path;
+
+   menu = elm_menu_add(edi_main_win_get());
+   menu_it = elm_menu_item_add(menu, NULL, "edit", _("Edit with..."), NULL, NULL);
+   if (ecore_file_app_installed("gimp"))
+     menu_it2 = elm_menu_item_add(menu, menu_it, "gimp", _("Gimp"), _item_menu_edit_cb, "gimp");
+   if (ecore_file_app_installed("inkscape"))
+     menu_it2 = elm_menu_item_add(menu, menu_it, "inkscape", _("Inkscape"), _item_menu_edit_cb, "inkscape");
+
+   return menu;
+}
+
+static void
+_image_secondary_clicked_cb(void *data EINA_UNUSED, Evas *e EINA_UNUSED,
+                            Evas_Object *obj EINA_UNUSED, void *event_info)
+{
+   Evas_Object *menu;
+   Evas_Event_Mouse_Up *ev;
+   const char *path = data;
+
+   ev = event_info;
+   if (ev->button != 3) return;
+
+   menu = _image_menu_create(path);
+   if (!menu) return;
+
+   elm_menu_move(menu, ev->canvas.x, ev->canvas.y);
+   evas_object_show(menu);
+}
+
 Evas_Object *
 edi_content_image_add(Evas_Object *parent, Edi_Mainview_Item *item)
 {
    Evas_Object *vbox, *box, *searchbar, *statusbar, *scroll, *img;
+   Evas_Coord w, h;
 
    vbox = elm_box_add(parent);
    evas_object_size_hint_weight_set(vbox, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -69,13 +119,18 @@ edi_content_image_add(Evas_Object *parent, Edi_Mainview_Item *item)
    evas_object_size_hint_weight_set(scroll, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    evas_object_size_hint_align_set(scroll, EVAS_HINT_FILL, EVAS_HINT_FILL);
    evas_object_show(scroll);
-   img = elm_image_add(vbox);
-   elm_image_file_set(img, item->path, NULL);
-   elm_image_no_scale_set(img, EINA_TRUE);
-   elm_object_content_set(scroll, img);
-   evas_object_show(img);
-
    elm_box_pack_end(box, scroll);
+
+   img = evas_object_image_filled_add(vbox);
+   evas_object_image_file_set(img, item->path, NULL);
+   evas_object_image_size_get(img, &w, &h);
+   evas_object_size_hint_weight_set(img, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+   evas_object_size_hint_align_set(img, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_size_hint_aspect_set(img, EVAS_ASPECT_CONTROL_BOTH, w, h);
+   evas_object_size_hint_max_set(img, w, h);
+   evas_object_show(img);
+   evas_object_event_callback_add(img, EVAS_CALLBACK_MOUSE_UP, _image_secondary_clicked_cb, item->path);
+   elm_object_content_set(scroll, img);
 
    edi_content_statusbar_add(statusbar, item);
    edi_content_statusbar_position_set(item->pos, 0, 0);
