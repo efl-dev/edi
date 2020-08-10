@@ -509,6 +509,8 @@ _edi_welcome_project_details(Evas_Object *naviframe, Edi_Template *template)
    elm_table_pack(content, label, _EDI_WELCOME_PROJECT_NEW_TABLE_WIDTH - 4, row, 2, 1);
 
    _edi_create_progress = pb = elm_progressbar_add(content);
+   evas_object_size_hint_weight_set(pb, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+   evas_object_size_hint_align_set(pb, EVAS_HINT_FILL, EVAS_HINT_FILL);
    elm_progressbar_pulse_set(pb, EINA_TRUE);
    elm_table_pack(content, pb, _EDI_WELCOME_PROJECT_NEW_TABLE_WIDTH - 4, row, 2, 1);
 
