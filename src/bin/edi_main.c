@@ -12,6 +12,7 @@
 #include "edi_filepanel.h"
 #include "edi_file.h"
 #include "edi_process.h"
+#include "edi_listen.h"
 #include "edi_logpanel.h"
 #include "edi_consolepanel.h"
 #include "edi_searchpanel.h"
@@ -51,8 +52,6 @@ static Evas_Object *_edi_menu_save, *_edi_menu_undo, *_edi_menu_redo, *_edi_menu
 static Evas_Object *_edi_menu_init, *_edi_menu_commit, *_edi_menu_push, *_edi_menu_pull, *_edi_menu_status, *_edi_menu_stash, *_edi_menu_terminate;
 static Evas_Object *_edi_main_win, *_edi_main_box;
 static Eina_Bool _edi_toolbar_is_horizontal, _edi_toolbar_text_visible;
-
-static void *_edi_listener = NULL;
 
 int _edi_log_dom = -1;
 
@@ -1750,127 +1749,6 @@ Evas_Object *
 edi_main_win_get(void)
 {
    return _edi_main_win;
-}
-
-typedef struct _Edi_Listen_Server {
-   Ecore_Event_Handler *handler;
-   Ecore_Con_Server    *srv;
-} Edi_Listen_Server;
-
-static Eina_Bool
-_edi_listen_server_client_connect_cb(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
-{
-   Ecore_Con_Event_Client_Data *ev;
-   const char *path;
-
-   ev = event;
-   path = ev->data;
-
-   edi_mainview_open_path(path);
-   ecore_con_client_del(ev->client);
-
-   return ECORE_CALLBACK_RENEW;
-}
-
-void
-edi_listen_shutdown(void)
-{
-   Edi_Listen_Server *server = _edi_listener;
-   if (!server) return;
-
-   ecore_event_handler_del(server->handler);
-   ecore_con_server_del(server->srv);
-   free(server);
-}
-
-Eina_Bool
-edi_listen_init(void)
-{
-   Edi_Listen_Server *server = calloc(1, sizeof(Edi_Listen_Server));
-   if (!server) return EINA_FALSE;
-
-   server->srv = ecore_con_server_add(ECORE_CON_LOCAL_USER, "listener", 0, NULL);
-   if (!server->srv) return EINA_FALSE;
-
-   server->handler = ecore_event_handler_add(ECORE_CON_EVENT_CLIENT_DATA, _edi_listen_server_client_connect_cb, NULL);
-   _edi_listener = server;
-
-   return EINA_TRUE;
-}
-
-typedef struct Edi_Listen_Client {
-   char      *path;
-   Eina_Bool  success;
-} Edi_Listen_Client;
-
-static Eina_Bool
-_edi_listen_client_closed_cb(void *data, int type EINA_UNUSED, void *ev EINA_UNUSED)
-{
-   Edi_Listen_Client *client = data;
-
-   client->success = EINA_TRUE;
-
-   return ECORE_CALLBACK_RENEW;
-}
-
-static Eina_Bool
-_edi_listen_client_check_timer_cb(void *data EINA_UNUSED)
-{
-   Edi_Listen_Client *client;
-   static double total = 0.0;
-
-   client = data;
-   total += 0.1;
-
-   if (total < 3.0)
-     return ECORE_CALLBACK_RENEW;
-
-   if (client->success)
-     ecore_main_loop_quit();
-   else
-     evas_object_show(edi_main_win_get());
-
-   return ECORE_CALLBACK_DONE;
-}
-
-static Eina_Bool
-_edi_listen_client_connect_cb(void *data, int type EINA_UNUSED, void *event EINA_UNUSED)
-{
-   Ecore_Con_Event_Server_Add *ev;
-   Ecore_Con_Server *srv;
-   Edi_Listen_Client *client;
-
-   ev = event;
-   srv = ev->server;
-   client = data;
-
-   ecore_con_server_send(srv, client->path, 1 + strlen(client->path));
-   ecore_con_server_flush(srv);
-
-   return ECORE_CALLBACK_DONE;
-}
-
-Eina_Bool
-edi_listen_client_add(char *path)
-{
-   Edi_Listen_Client *client;
-   Ecore_Con_Server *srv = ecore_con_server_connect(ECORE_CON_LOCAL_USER, "listener", 0, NULL);
-   if (!srv)
-     {
-        free(path);
-        return EINA_FALSE;
-     }
-
-   client = calloc(1, sizeof(Edi_Listen_Client));
-   if (!client) return EINA_FALSE;
-
-   client->path = path;
-
-   ecore_event_handler_add(ECORE_CON_EVENT_SERVER_ADD, _edi_listen_client_connect_cb, client);
-   ecore_event_handler_add(ECORE_CON_EVENT_SERVER_DEL, _edi_listen_client_closed_cb, client);
-   ecore_timer_add(0.1, _edi_listen_client_check_timer_cb, client);
-
-   return EINA_TRUE;
 }
 
 Eina_Bool

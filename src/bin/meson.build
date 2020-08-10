@@ -17,6 +17,8 @@ src = files([
   'edi_file.h',
   'edi_filepanel.c',
   'edi_filepanel.h',
+  'edi_listen.c',
+  'edi_listen.h',
   'edi_logpanel.c',
   'edi_logpanel.h',
   'edi_main.c',
