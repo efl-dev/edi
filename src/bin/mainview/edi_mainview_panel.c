@@ -371,6 +371,7 @@ edi_mainview_panel_item_select(Edi_Mainview_Panel *panel, Edi_Mainview_Item *ite
      }
 
    edi_mainview_panel_focus(panel);
+   _edi_mainview_panel_current_tab_show(panel);
    ecore_event_add(EDI_EVENT_TAB_CHANGED, NULL, NULL, NULL);
 }
 
