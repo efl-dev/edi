@@ -53,7 +53,7 @@ _item_menu_edit_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EI
 static Evas_Object *
 _image_menu_create(const char *path)
 {
-   Elm_Object_Item *menu_it, *menu_it2;
+   Elm_Object_Item *menu_it;
    Evas_Object *menu;
 
    _image_path = path;
@@ -61,9 +61,9 @@ _image_menu_create(const char *path)
    menu = elm_menu_add(edi_main_win_get());
    menu_it = elm_menu_item_add(menu, NULL, "edit", _("Edit with..."), NULL, NULL);
    if (ecore_file_app_installed("gimp"))
-     menu_it2 = elm_menu_item_add(menu, menu_it, "gimp", _("Gimp"), _item_menu_edit_cb, "gimp");
+     elm_menu_item_add(menu, menu_it, "gimp", _("Gimp"), _item_menu_edit_cb, "gimp");
    if (ecore_file_app_installed("inkscape"))
-     menu_it2 = elm_menu_item_add(menu, menu_it, "inkscape", _("Inkscape"), _item_menu_edit_cb, "inkscape");
+     elm_menu_item_add(menu, menu_it, "inkscape", _("Inkscape"), _item_menu_edit_cb, "inkscape");
 
    return menu;
 }

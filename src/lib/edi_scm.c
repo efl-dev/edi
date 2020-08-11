@@ -25,7 +25,7 @@ _edi_scm_exec(const char *command)
 
    if (!self) return -1;
 
-   oldpwd = getcwd(NULL, PATH_MAX);
+   oldpwd = getcwd(NULL, 0);
 
    chdir(self->root_directory);
    code = edi_exe_wait(command);
@@ -44,7 +44,7 @@ _edi_scm_exec_response(const char *command)
 
    if (!self) return NULL;
 
-   oldpwd = getcwd(NULL, PATH_MAX);
+   oldpwd = getcwd(NULL, 0);
 
    chdir(self->root_directory);
    response = edi_exe_response(command);
@@ -61,7 +61,7 @@ edi_scm_git_new(void)
    int code;
    char *oldpwd;
 
-   oldpwd = getcwd(NULL, PATH_MAX);
+   oldpwd = getcwd(NULL, 0);
 
    chdir(edi_project_get());
    code = edi_exe_wait("git init .");
@@ -95,7 +95,7 @@ edi_scm_git_update(const char *dir)
    char *oldpwd;
    int code;
 
-   oldpwd = getcwd(NULL, PATH_MAX);
+   oldpwd = getcwd(NULL, 0);
 
    chdir(dir);
    code = edi_exe_wait("git fetch origin && git reset --hard origin/master");
@@ -921,7 +921,7 @@ edi_scm_init(void)
    if (edi_project_get())
      return edi_scm_init_path(edi_project_get());
 
-   cwd = getcwd(NULL, PATH_MAX);
+   cwd = getcwd(NULL, 0);
    engine = edi_scm_init_path(cwd);
    free(cwd);
    return engine;
