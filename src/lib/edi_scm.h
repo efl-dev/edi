@@ -41,6 +41,7 @@ typedef int (scm_fn_del)(const char *path);
 typedef int (scm_fn_move)(const char *src, const char *dest);
 typedef int (scm_fn_commit)(const char *message);
 typedef int (scm_fn_status)(void);
+typedef Eina_List *(scm_fn_log)(void);
 typedef char *(scm_fn_diff)(Eina_Bool);
 typedef int (scm_fn_push)(void);
 typedef int (scm_fn_pull)(void);
@@ -70,6 +71,7 @@ typedef struct _Edi_Scm_Engine
    scm_fn_move        *move;
    scm_fn_commit      *commit;
    scm_fn_status      *status;
+   scm_fn_log         *log;
    scm_fn_diff        *diff;
    scm_fn_file_status *file_status;
    scm_fn_push        *push;
@@ -217,6 +219,14 @@ void edi_scm_commit(const char *message);
 void edi_scm_status(void);
 
 /**
+ * Get log of repository.
+ *
+ * @ingroup Scm
+ */
+Eina_List *edi_scm_log(void);
+
+/**
+ *
  * Get file status within repository.
  *
  * @param path The file path.

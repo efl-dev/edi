@@ -48,7 +48,7 @@ static Evas_Object *_edi_filepanel, *_edi_filepanel_icon;
 
 static Evas_Object *_edi_toolbar_save, *_edi_toolbar_undo, *_edi_toolbar_redo, *_edi_toolbar_build, *_edi_toolbar_test, *_edi_toolbar_clean;
 static Evas_Object *_edi_toolbar_run, *_edi_toolbar_terminate, *_edi_toolbar_hbx, *_edi_toolbar_vbx, *_edi_toolbar_main_box;
-static Evas_Object *_edi_menu_save, *_edi_menu_undo, *_edi_menu_redo, *_edi_menu_build, *_edi_menu_clean, *_edi_menu_test, *_edi_menu_run;
+static Evas_Object *_edi_menu_save, *_edi_menu_undo, *_edi_menu_redo, *_edi_menu_build, *_edi_menu_clean, *_edi_menu_test, *_edi_menu_run, *_edi_menu_log;
 static Evas_Object *_edi_menu_init, *_edi_menu_commit, *_edi_menu_push, *_edi_menu_pull, *_edi_menu_status, *_edi_menu_stash, *_edi_menu_terminate;
 static Evas_Object *_edi_main_win, *_edi_main_box;
 static Eina_Bool _edi_toolbar_is_horizontal, _edi_toolbar_text_visible;
@@ -626,6 +626,7 @@ _edi_icon_update()
         elm_object_item_disabled_set(_edi_menu_push, !can_remote);
         elm_object_item_disabled_set(_edi_menu_pull, !can_remote);
         elm_object_item_disabled_set(_edi_menu_status, !can_scm);
+        elm_object_item_disabled_set(_edi_menu_log, !can_scm);
         elm_object_item_disabled_set(_edi_menu_commit, !can_scm);
         elm_object_item_disabled_set(_edi_menu_stash, !can_scm);
      }
@@ -1241,6 +1242,13 @@ _edi_menu_scm_status_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED,
 }
 
 static void
+_edi_menu_scm_log_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED,
+                     void *event_info EINA_UNUSED)
+{
+   ecore_exe_run(eina_slstr_printf("edi_scm --log ."), NULL);
+}
+
+static void
 _edi_menu_scm_pull_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED,
                         void *event_info EINA_UNUSED)
 {
@@ -1352,7 +1360,10 @@ _edi_menu_setup(Evas_Object *win)
         _edi_menu_init = elm_menu_item_add(menu, menu_it, edi_theme_icon_path_get("media-playback-start"), _("Init"), _edi_menu_scm_init_cb, NULL);
         _edi_menu_commit = elm_menu_item_add(menu, menu_it, edi_theme_icon_path_get("mail-send"), _("Commit"), _edi_menu_scm_commit_cb, NULL);
         _edi_menu_stash = elm_menu_item_add(menu, menu_it, edi_theme_icon_path_get("edit-undo"), _("Stash"), _edi_menu_scm_stash_cb, NULL);
+        elm_menu_item_separator_add(menu, menu_it);
         _edi_menu_status = elm_menu_item_add(menu, menu_it, edi_theme_icon_path_get("dialog-error"), _("Status"), _edi_menu_scm_status_cb, NULL);
+        _edi_menu_log = elm_menu_item_add(menu, menu_it, edi_theme_icon_path_get("dialog-information"), _("Log"), _edi_menu_scm_log_cb, NULL);
+        elm_menu_item_separator_add(menu, menu_it);
         _edi_menu_push = elm_menu_item_add(menu, menu_it, edi_theme_icon_path_get("go-up"), _("Push"), _edi_menu_scm_push_cb, NULL);
         _edi_menu_pull = elm_menu_item_add(menu, menu_it, edi_theme_icon_path_get("go-down"), _("Pull"), _edi_menu_scm_pull_cb, NULL);
      }

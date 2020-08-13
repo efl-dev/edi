@@ -46,34 +46,45 @@ _win_add(Edi_Scm_Engine *engine)
    return win;
 }
 
+static void
+usage(void)
+{
+   printf("Usage: edi_scm [directory]\n\n");
+   printf("The Enlightened IDE Source Control\n\n");
+
+   printf("Options:\n");
+   printf("  -c, --commit\t\topen with the commit screen.\n");
+   printf("  -l, --log\t\tshow scm log.\n");
+   printf("  -h, --help\t\tshow this message.\n");
+   exit(0);
+}
+
 int main(int argc, char **argv)
 {
    Evas_Object *win;
    Edi_Scm_Engine *engine;
    const char *arg, *root;
+   Edi_Scm_Ui_Opts options;
+
+   memset(&options,0, sizeof(Edi_Scm_Ui_Opts));
 
    ecore_init();
    elm_init(argc, argv);
    root = NULL;
 
-   if (argc >= 2)
+   for (int i = 1; i < argc; i++)
      {
-        arg = argv[1];
+        arg = argv[i];
         if (!strcmp("-h", arg) || !strcmp("--help", arg))
           {
-             printf("Usage: edi_scm [directory]\n\n");
-             printf("The Enlightened IDE Source Control\n\n");
-
-             printf("Options:\n");
-             printf("  -c, --commit\t\topen with the commit screen.\n");
-             printf("  -h, --help\t\tshow this message.\n");
-             return 0;
+             usage();
           }
-
-        if (!strcmp("-c", arg) || !strcmp("--commit", arg))
+        else if (!strcmp("-c", arg) || !strcmp("--commit", arg))
           {
-             if (argc >= 3)
-               root = argv[2];
+          }
+        else if (!strcmp("-l", arg) || !strcmp("--log", arg))
+          {
+             options.log = EINA_TRUE;
           }
         else
           {
@@ -99,7 +110,7 @@ int main(int argc, char **argv)
      exit(1 << 2);
 
    win = _win_add(engine);
-   edi_scm_ui_add(win);
+   edi_scm_ui_add(win, options);
    elm_win_center(win, EINA_TRUE, EINA_TRUE);
    evas_object_show(win);
 

@@ -220,6 +220,48 @@ _edi_scm_git_status(void)
    return code;
 }
 
+static void
+_chomp(char *s)
+{
+   while (*s)
+     {
+        if (*s == '\r' || *s == '\n')
+          {
+             *s = 0;
+             return;
+          }
+        ++s;
+     }
+}
+
+static Eina_List *
+_edi_scm_git_log(void)
+{
+   FILE *p;
+   Eina_Strbuf *command;
+   char buf[4096];
+   Eina_List *lines = NULL;
+
+   command = eina_strbuf_new();
+
+   eina_strbuf_append(command, "git log");
+
+   p = popen(eina_strbuf_string_get(command), "r");
+   if (!p) return NULL;
+
+   while ((fgets(buf, sizeof(buf), p)) != NULL)
+     {
+        _chomp(buf);
+        lines = eina_list_append(lines, strdup(buf));
+     }
+
+   eina_strbuf_free(command);
+
+   pclose(p);
+
+   return lines;
+}
+
 static Edi_Scm_Status *
 _parse_line(char *line)
 {
@@ -769,6 +811,14 @@ edi_scm_diff(Eina_Bool cached)
    return e->diff(cached);
 }
 
+EAPI Eina_List *
+edi_scm_log(void)
+{
+   Edi_Scm_Engine *e = edi_scm_engine_get();
+
+   return e->log();
+}
+
 EAPI void
 edi_scm_stash(void)
 {
@@ -847,6 +897,7 @@ _edi_scm_git_init(const char *rootdir)
    engine->file_undo = _edi_scm_git_file_undo;
    engine->move = _edi_scm_git_file_move;
    engine->status = _edi_scm_git_status;
+   engine->log = _edi_scm_git_log;
    engine->diff = _edi_scm_git_diff;
    engine->commit = _edi_scm_git_commit;
    engine->pull = _edi_scm_git_pull;

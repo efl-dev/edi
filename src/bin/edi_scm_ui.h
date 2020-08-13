@@ -12,6 +12,10 @@ extern "C" {
  * @brief These routines used for managing Edi SCM UI actions.
  */
 
+typedef struct _Edi_Scm_Ui_Opts {
+   Eina_Bool log;
+} Edi_Scm_Ui_Opts;
+
 /**
  * @brief SCM management functions.
  * @defgroup SCM
@@ -28,7 +32,7 @@ extern "C" {
  * @param parent Parent object to add the commit UI to.
  * @ingroup SCM
  */
-void edi_scm_ui_add(Evas_Object *parent);
+void edi_scm_ui_add(Evas_Object *parent, Edi_Scm_Ui_Opts opts);
 /**
  * @}
  */

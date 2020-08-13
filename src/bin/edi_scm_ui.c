@@ -601,8 +601,82 @@ _avatar_effect(Evas_Object *avatar)
    evas_map_free(map);
 }
 
+static void
+_edi_scm_ui_close_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED,
+                     void *event_info EINA_UNUSED)
+{
+   ecore_main_loop_quit();
+}
+
+static Eina_Bool
+_edi_scm_ui_log_fill_cb(void *data)
+{
+   Edi_Scm_Engine *engine;
+   Evas_Object *entry;
+   Eina_List *log;
+   char *line;
+
+   entry = data;
+
+   engine = edi_scm_engine_get();
+   log = engine->log();
+   EINA_LIST_FREE(log, line)
+     {
+        elm_entry_entry_insert(entry, eina_slstr_printf("%s<br>", line));
+        free(line);
+     }
+
+   return ECORE_CALLBACK_CANCEL;
+}
+
+static void
+_edi_scm_ui_log(Evas_Object *parent)
+{
+   Evas_Object *bx, *hbx, *pad, *entry, *btn;
+
+   bx = elm_box_add(parent);
+   evas_object_size_hint_align_set(bx, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_size_hint_weight_set(bx, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+   evas_object_show(bx);
+   elm_object_content_set(parent, bx);
+
+   entry = elm_entry_add(parent);
+   elm_entry_editable_set(entry, EINA_FALSE);
+   elm_entry_single_line_set(entry, EINA_FALSE);
+   elm_entry_scrollable_set(entry, EINA_TRUE);
+   elm_scroller_policy_set(entry, ELM_SCROLLER_POLICY_AUTO, ELM_SCROLLER_POLICY_AUTO);
+   evas_object_size_hint_weight_set(entry, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+   evas_object_size_hint_align_set(entry, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_show(entry);
+   elm_box_pack_end(bx, entry);
+
+   hbx = elm_box_add(bx);
+   elm_box_horizontal_set(hbx, EINA_TRUE);
+   evas_object_size_hint_align_set(hbx, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_size_hint_weight_set(hbx, EVAS_HINT_EXPAND, 0.0);
+   evas_object_show(hbx);
+   elm_box_pack_end(bx, hbx);
+
+   pad = elm_box_add(hbx);
+   elm_box_horizontal_set(pad, EINA_TRUE);
+   evas_object_size_hint_align_set(pad, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_size_hint_weight_set(pad, EVAS_HINT_EXPAND, 0.0);
+   evas_object_show(pad);
+   elm_box_pack_end(hbx, pad);
+
+   btn = elm_button_add(hbx);
+   evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_size_hint_weight_set(btn, 0.25, EVAS_HINT_EXPAND);
+   elm_object_text_set(btn, _("Close"));
+   evas_object_smart_callback_add(btn, "clicked", _edi_scm_ui_close_cb, NULL);
+
+   ecore_timer_add(0.1, _edi_scm_ui_log_fill_cb, entry);
+   evas_object_show(btn);
+   elm_box_pack_end(hbx, btn);
+}
+
 void
-edi_scm_ui_add(Evas_Object *parent)
+edi_scm_ui_add(Evas_Object *parent, Edi_Scm_Ui_Opts options)
 {
    Evas_Object *layout, *frame, *hbox, *cbox, *label, *avatar, *input, *button;
    Evas_Object *list, *pbox;
@@ -617,6 +691,12 @@ edi_scm_ui_add(Evas_Object *parent)
    engine = edi_scm_engine_get();
    if (!engine)
      exit(1 << 1);
+
+   if (options.log)
+     {
+        _edi_scm_ui_log(parent);
+        return;
+     }
 
    pd = calloc(1, sizeof(Edi_Scm_Ui_Data));
    pd->workdir = engine->root_directory;
