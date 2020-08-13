@@ -1245,7 +1245,12 @@ static void
 _edi_menu_scm_log_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED,
                      void *event_info EINA_UNUSED)
 {
-   ecore_exe_run(eina_slstr_printf("edi_scm --log ."), NULL);
+   char *workdir = getcwd(NULL, 0);
+
+   chdir(edi_project_get());
+   ecore_exe_run(eina_slstr_printf("edi_scm --log"), NULL);
+   chdir(workdir);
+   free(workdir);
 }
 
 static void
