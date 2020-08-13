@@ -612,7 +612,7 @@ static Eina_Bool
 _edi_scm_ui_log_fill_cb(void *data)
 {
    Edi_Scm_Engine *engine;
-   Evas_Object *entry;
+   Evas_Object *entry, *scr;
    Eina_List *log;
    char *line;
 
@@ -666,7 +666,7 @@ _edi_scm_ui_log(Evas_Object *parent)
 
    btn = elm_button_add(hbx);
    evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, EVAS_HINT_FILL);
-   evas_object_size_hint_weight_set(btn, 0.25, EVAS_HINT_EXPAND);
+   evas_object_size_hint_weight_set(btn, 0.2, EVAS_HINT_EXPAND);
    elm_object_text_set(btn, _("Close"));
    evas_object_smart_callback_add(btn, "clicked", _edi_scm_ui_close_cb, NULL);
 
@@ -690,7 +690,7 @@ edi_scm_ui_add(Evas_Object *parent, Edi_Scm_Ui_Opts options)
 
    engine = edi_scm_engine_get();
    if (!engine)
-     exit(1 << 1);
+     exit(1 << 7);
 
    if (options.log)
      {

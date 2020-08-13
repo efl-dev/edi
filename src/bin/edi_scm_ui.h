@@ -14,6 +14,7 @@ extern "C" {
 
 typedef struct _Edi_Scm_Ui_Opts {
    Eina_Bool log;
+   Eina_Bool commit;
 } Edi_Scm_Ui_Opts;
 
 /**

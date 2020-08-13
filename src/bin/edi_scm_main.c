@@ -66,48 +66,36 @@ int main(int argc, char **argv)
    const char *arg, *root;
    Edi_Scm_Ui_Opts options;
 
-   memset(&options,0, sizeof(Edi_Scm_Ui_Opts));
-
-   ecore_init();
-   elm_init(argc, argv);
+   memset(&options, 0, sizeof(Edi_Scm_Ui_Opts));
    root = NULL;
 
    for (int i = 1; i < argc; i++)
      {
         arg = argv[i];
         if (!strcmp("-h", arg) || !strcmp("--help", arg))
-          {
-             usage();
-          }
+          usage();
         else if (!strcmp("-c", arg) || !strcmp("--commit", arg))
-          {
-          }
+          options.commit = EINA_TRUE;
         else if (!strcmp("-l", arg) || !strcmp("--log", arg))
-          {
-             options.log = EINA_TRUE;
-          }
+          options.log = EINA_TRUE;
         else
-          {
-             root = arg;
-          }
+          root = arg;
      }
 
-   if (root)
+   if (!root) usage();
+
+   ecore_init();
+   elm_init(argc, argv);
+
+   if (!ecore_file_is_dir(root))
      {
-        if (!ecore_file_is_dir(root))
-          {
-             fprintf(stderr, _("Root path must be a directory\n"));
-             exit(1 << 0);
-          }
-        engine = edi_scm_init_path(realpath(root, NULL));
-     }
-   else
-     {
-        engine = edi_scm_init();
+        fprintf(stderr, _("Root path must be a directory\n"));
+        exit(1);
      }
 
+   engine = edi_scm_init_path(realpath(root, NULL));
    if (!engine)
-     exit(1 << 2);
+     exit(1 << 7);
 
    win = _win_add(engine);
    edi_scm_ui_add(win, options);
