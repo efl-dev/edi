@@ -612,7 +612,7 @@ static Eina_Bool
 _edi_scm_ui_log_fill_cb(void *data)
 {
    Edi_Scm_Engine *engine;
-   Evas_Object *entry, *scr;
+   Evas_Object *entry;
    Eina_List *log;
    char *line;
 

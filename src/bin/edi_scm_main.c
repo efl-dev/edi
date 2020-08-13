@@ -82,7 +82,7 @@ int main(int argc, char **argv)
           root = arg;
      }
 
-   if (!root) usage();
+   if (!root) root = getcwd(NULL, 0);
 
    ecore_init();
    elm_init(argc, argv);
