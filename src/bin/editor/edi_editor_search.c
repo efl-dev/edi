@@ -461,7 +461,7 @@ edi_editor_search_add(Evas_Object *parent, Edi_Editor *editor)
 
    lbl = elm_label_add(parent);
    elm_object_text_set(lbl, _("Search term"));
-   evas_object_size_hint_align_set(lbl, EVAS_HINT_FILL, 0.5);
+   evas_object_size_hint_align_set(lbl, 1.0, 0.5);
    evas_object_size_hint_weight_set(lbl, 0.0, 0.0);
    elm_table_pack(table, lbl, 0, 0, 1, 1);
    evas_object_show(lbl);
@@ -476,7 +476,7 @@ edi_editor_search_add(Evas_Object *parent, Edi_Editor *editor)
 
    replace_lbl = elm_label_add(parent);
    elm_object_text_set(replace_lbl, _("Replace term"));
-   evas_object_size_hint_align_set(replace_lbl, EVAS_HINT_FILL, 0.5);
+   evas_object_size_hint_align_set(replace_lbl, 1.0, 0.5);
    evas_object_size_hint_weight_set(replace_lbl, 0.0, 0.0);
    elm_table_pack(table, replace_lbl, 0, 1, 1, 1);
    evas_object_show(replace_lbl);
@@ -492,10 +492,9 @@ edi_editor_search_add(Evas_Object *parent, Edi_Editor *editor)
 
    box = elm_box_add(parent);
    elm_box_homogeneous_set(box, EINA_FALSE);
-   elm_box_padding_set(box, 15, 0);
    elm_box_horizontal_set(box, EINA_TRUE);
-   evas_object_size_hint_align_set(box, 1.0, EVAS_HINT_FILL);
-   evas_object_size_hint_weight_set(box, 0.0, 0.0);
+   evas_object_size_hint_align_set(box, 1.0, 0.5);
+   evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, 0.0);
    evas_object_show(box);
    elm_box_pack_end(big_box, box);
 
@@ -506,7 +505,7 @@ edi_editor_search_add(Evas_Object *parent, Edi_Editor *editor)
    elm_box_pack_end(box, wrapped_text);
 
    checkbox = elm_check_add(parent);
-   elm_object_text_set(checkbox, _("Wrap search?"));
+   elm_object_text_set(checkbox, _("Wrap Search"));
    elm_check_state_set(checkbox, EINA_TRUE);
    evas_object_show(checkbox);
    elm_box_pack_end(box, checkbox);
@@ -514,7 +513,7 @@ edi_editor_search_add(Evas_Object *parent, Edi_Editor *editor)
    btn = elm_button_add(parent);
    elm_object_text_set(btn, _("Search"));
    evas_object_size_hint_align_set(btn, 1.0, 0.0);
-   evas_object_size_hint_weight_set(btn, 0.0, 0.0);
+   evas_object_size_hint_weight_set(btn,EVAS_HINT_FILL, 0.0);
    evas_object_show(btn);
    elm_box_pack_end(box, btn);
    evas_object_smart_callback_add(btn, "clicked", _edi_search_clicked, editor);
@@ -522,7 +521,7 @@ edi_editor_search_add(Evas_Object *parent, Edi_Editor *editor)
    replace_btn = elm_button_add(parent);
    elm_object_text_set(replace_btn, _("Replace"));
    evas_object_size_hint_align_set(replace_btn, 1.0, 0.0);
-   evas_object_size_hint_weight_set(replace_btn, 0.0, 0.0);
+   evas_object_size_hint_weight_set(replace_btn, EVAS_HINT_FILL, 0.0);
    evas_object_show(replace_btn);
    elm_box_pack_end(box, replace_btn);
    evas_object_smart_callback_add(replace_btn, "clicked", _edi_replace_clicked, editor);
@@ -530,7 +529,7 @@ edi_editor_search_add(Evas_Object *parent, Edi_Editor *editor)
    btn = elm_button_add(parent);
    elm_object_text_set(btn, _("Cancel"));
    evas_object_size_hint_align_set(btn, 1.0, 0.0);
-   evas_object_size_hint_weight_set(btn, 0.0, 0.0);
+   evas_object_size_hint_weight_set(btn, EVAS_HINT_FILL, 0.0);
    evas_object_show(btn);
    elm_box_pack_end(box, btn);
    evas_object_smart_callback_add(btn, "clicked", _edi_cancel_clicked, editor);
