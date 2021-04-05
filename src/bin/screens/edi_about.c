@@ -127,7 +127,7 @@ edi_about_show(Evas_Object *mainwin)
    button = elm_button_add(box);
    elm_object_text_set(button, _("Visit Website"));
    evas_object_smart_callback_add(button, "clicked", _edi_about_url_cb,
-                                  "http://edi-ide.com");
+                                  "https://www.enlightenment.org/about-edi.md");
    elm_box_pack_end(buttonbox, button);
    evas_object_show(button);
 
@@ -137,9 +137,9 @@ edi_about_show(Evas_Object *mainwin)
    evas_object_show(space);
 
    button = elm_button_add(box);
-   elm_object_text_set(button, _("Report Issue"));
+   elm_object_text_set(button, _("Report Issues"));
    evas_object_smart_callback_add(button, "clicked", _edi_about_url_cb,
-                                  "https://github.com/Enlightenment/edi/issues/new");
+                                  "https://phab.enlightenment.org");
    elm_box_pack_end(buttonbox, button);
    evas_object_show(button);
 
@@ -148,24 +148,10 @@ edi_about_show(Evas_Object *mainwin)
    elm_box_pack_end(buttonbox, space);
    evas_object_show(space);
 
-   button = elm_button_add(box);
-   elm_object_text_set(button, _("Help Translate"));
-   evas_object_smart_callback_add(button, "clicked", _edi_about_url_cb,
-                                  "https://www.transifex.com/enlightenment/edi-ide/languages/");
-   elm_box_pack_end(buttonbox, button);
-   evas_object_show(button);
-
    space = elm_box_add(box);
    evas_object_size_hint_min_set(space, 20 * elm_config_scale_get(), 0);
    elm_box_pack_end(buttonbox, space);
    evas_object_show(space);
-
-   button = elm_button_add(box);
-   elm_object_text_set(button, _("Donate Now"));
-   evas_object_smart_callback_add(button, "clicked", _edi_about_url_cb,
-                                  "https://www.bountysource.com/teams/edi-ide");
-   elm_box_pack_end(buttonbox, button);
-   evas_object_show(button);
 
    evas_object_resize(win, 520 * elm_config_scale_get(), 360 * elm_config_scale_get());
    evas_object_show(win);
