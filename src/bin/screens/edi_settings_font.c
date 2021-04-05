@@ -36,8 +36,17 @@ static Eina_Hash *fonthash = NULL;
 static Evas_Object *
 _edi_settings_font_preview_add(Evas_Object *parent, const char *font_name, int font_size)
 {
-   Elm_Code_Widget *widget;
+   Elm_Code_Widget *widget, *table, *rect;
    Elm_Code *code;
+
+   table = elm_table_add(parent);
+
+   rect = evas_object_rectangle_add(evas_object_evas_get(parent));
+   evas_object_color_set(rect, 0, 0, 0, 0);
+   evas_object_size_hint_min_set(rect, 240 * elm_config_scale_get(), 40 * elm_config_scale_get());
+   evas_object_size_hint_weight_set(rect, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+   evas_object_size_hint_align_set(rect, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   elm_table_pack(table, rect, 0, 0, 1, 1);
 
    code = elm_code_create();
    elm_code_file_line_append(code->file, FONT_PREVIEW, 35, NULL);
@@ -47,11 +56,15 @@ _edi_settings_font_preview_add(Evas_Object *parent, const char *font_name, int f
    elm_code_widget_line_numbers_set(widget, EINA_TRUE);
    elm_code_widget_editable_set(widget, EINA_FALSE);
    elm_code_widget_policy_set(widget, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
-   evas_object_size_hint_weight_set(widget, 0.5, EVAS_HINT_EXPAND);
+   evas_object_size_hint_weight_set(widget, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    evas_object_size_hint_align_set(widget, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_pass_events_set(widget, EINA_TRUE);
+   elm_table_pack(table, widget, 0, 0, 1, 1);
    evas_object_show(widget);
 
-   return widget;
+   evas_object_data_set(table, "code", widget);
+
+   return table;
 }
 
 #if 0
@@ -204,30 +217,15 @@ _cb_op_font_sort(const void *d1, const void *d2)
 static Evas_Object *
 _cb_op_font_content_get(void *data, Evas_Object *obj, const char *part)
 {
-   Evas_Object *box, *label;
+   Evas_Object *o;
    Font *f = data;
 
-   if (strcmp(part, "elm.swallow.content"))
-     return NULL;
+   if (strcmp(part, "elm.swallow.end")) return NULL;
 
-   box = elm_box_add(obj);
-   elm_box_horizontal_set(box, EINA_TRUE);
-   elm_box_homogeneous_set(box, EINA_TRUE);
-   evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-   evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
-   evas_object_show(box);
-
-   label = elm_label_add(obj);
-   elm_object_text_set(label, f->pretty_name);
-   evas_object_size_hint_weight_set(label, 0.5, EVAS_HINT_EXPAND);
-   evas_object_size_hint_align_set(label, 0.0, EVAS_HINT_FILL);
-   evas_object_show(label);
-   elm_box_pack_end(box, label);
-
-   f->widget = _edi_settings_font_preview_add(box, f->full_name,
-                                              _edi_project_config->font.size);
-   elm_box_pack_end(box, f->widget);
-   return box;
+   o = _edi_settings_font_preview_add(obj, f->full_name,
+                                      _edi_project_config->font.size);
+   f->widget = evas_object_data_get(o, "code");
+   return o;
 }
 
 static char *
@@ -318,7 +316,7 @@ edi_settings_font_add(Evas_Object *opbox)
    evas_object_show(bx);
 
    it_class = elm_genlist_item_class_new();
-   it_class->item_style = "full";
+   it_class->item_style = "default";
    it_class->func.text_get = _cb_op_font_text_get;
    it_class->func.content_get = _cb_op_font_content_get;
 
@@ -338,11 +336,6 @@ edi_settings_font_add(Evas_Object *opbox)
           {
              f = calloc(1, sizeof(Font));
              _parse_font_name(fname, &f->full_name, &f->pretty_name);
-             if (!strcasestr(f->full_name, "mono"))
-               {
-                  free(f);
-                  continue;
-               }
              eina_hash_add(fonthash, eina_stringshare_add(fname), f);
              fonts = eina_list_append(fonts, f);
              f->item = it = elm_genlist_item_append(o, it_class, f, NULL,

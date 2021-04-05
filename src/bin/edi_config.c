@@ -534,7 +534,7 @@ _edi_project_config_load()
 
    IFPCFG(0x0002);
    _edi_project_config->font.name = eina_stringshare_add("Mono");
-   _edi_project_config->font.size = 11;
+   _edi_project_config->font.size = 10;
    IFPCFGEND;
 
    IFPCFG(0x0003);
