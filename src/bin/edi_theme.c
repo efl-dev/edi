@@ -155,6 +155,8 @@ edi_theme_themes_get(void)
 const char *
 edi_theme_icon_path_get(const char *name)
 {
+   return name;
+/*
    char *path;
    const char *icon_path, *directory = PACKAGE_DATA_DIR "/icons";
    icon_path = name;
@@ -173,6 +175,7 @@ edi_theme_icon_path_get(const char *name)
      }
 
    return icon_path;
+ */
 }
 
 void
