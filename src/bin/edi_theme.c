@@ -155,8 +155,6 @@ edi_theme_themes_get(void)
 const char *
 edi_theme_icon_path_get(const char *name)
 {
-   return name;
-/*
    char *path;
    const char *icon_path, *directory = PACKAGE_DATA_DIR "/icons";
    icon_path = name;
@@ -175,7 +173,6 @@ edi_theme_icon_path_get(const char *name)
      }
 
    return icon_path;
- */
 }
 
 void
@@ -187,5 +184,6 @@ edi_theme_internal_icons_set(Eina_Bool enabled)
 Eina_Bool
 edi_theme_internal_icons_get(void)
 {
-   return _edi_theme_internal_icons;
+   return EINA_FALSE;
+//   return _edi_theme_internal_icons;
 }
