@@ -151,7 +151,6 @@ _edi_welcome_project_choose_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNU
    win = elm_win_util_standard_add("projectselector", _("Choose a Project Folder"));
    if (!win) return;
 
-   elm_win_focus_highlight_enabled_set(win, EINA_TRUE);
    evas_object_smart_callback_add(win, "delete,request", _edi_welcome_choose_exit, win);
 
    fs = elm_fileselector_add(win);
@@ -921,7 +920,6 @@ Evas_Object *edi_welcome_show()
    if (!win) return NULL;
 
    _welcome_window = win;
-   elm_win_focus_highlight_enabled_set(win, EINA_TRUE);
    evas_object_smart_callback_add(win, "delete,request", _edi_welcome_exit, win);
 
    naviframe = elm_naviframe_add(win);

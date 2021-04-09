@@ -1806,7 +1806,6 @@ edi_open(const char *inputpath)
    if (!win) return EINA_FALSE;
 
    _edi_main_win = win;
-   elm_win_focus_highlight_enabled_set(win, EINA_TRUE);
    evas_object_smart_callback_add(win, "delete,request", _edi_exit, NULL);
    evas_object_event_callback_add(win, EVAS_CALLBACK_RESIZE, _edi_resize_cb, NULL);
    evas_object_smart_callback_add(win, "focused", _edi_focused_cb, NULL);

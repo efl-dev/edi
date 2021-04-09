@@ -33,7 +33,6 @@ edi_about_show(Evas_Object *mainwin)
 
    title_text = eina_slstr_printf(_("About Edi %s"), PACKAGE_VERSION);
    elm_win_title_set(win, title_text);
-   elm_win_focus_highlight_enabled_set(win, EINA_TRUE);
    evas_object_smart_callback_add(win, "delete,request", _edi_about_exit, win);
 
    table = elm_table_add(win);
