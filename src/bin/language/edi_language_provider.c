@@ -13,6 +13,7 @@
 #include "edi_language_provider_rust.c"
 #include "edi_language_provider_go.c"
 #include "edi_language_provider_csharp.c"
+#include "edi_language_provider_shell.c"
 
 static Edi_Language_Provider _edi_language_provider_registry[] =
 {
@@ -39,6 +40,11 @@ static Edi_Language_Provider _edi_language_provider_registry[] =
    {
       "csharp", _edi_language_csharp_add, _edi_language_csharp_refresh, _edi_language_csharp_del,
       _edi_language_csharp_mime_name, _edi_language_csharp_snippet_get,
+      NULL, NULL
+   },
+   {
+      "shell", _edi_language_shell_add, _edi_language_shell_refresh, _edi_language_shell_del,
+      _edi_language_shell_mime_name, _edi_language_shell_snippet_get,
       NULL, NULL
    },
 
@@ -71,6 +77,8 @@ Edi_Language_Provider *edi_language_provider_for_mime_get(const char *mime)
      id = "go";
    if (!strcasecmp(mime, "text/x-csharp"))
      id = "csharp";
+   if (!strcasecmp(mime, "application/x-shellscript"))
+     id = "shell";
 
    if (!id)
      return NULL;

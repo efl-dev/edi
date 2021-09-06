@@ -54,7 +54,8 @@ edi_mime_type_get(const char *path)
    eina_file_close(f);
 
    mime = efreet_mime_type_get(path);
-   if (mime && (strncmp(mime, "text/", 5)) && likely_text)
+   if (!strcmp(mime, "application/x-shellscript")) return mime;
+   if ((mime) && (strncmp(mime, "text/", 5)) && (likely_text))
      {
         return "text/plain";
      }
