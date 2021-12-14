@@ -102,7 +102,7 @@ typedef struct _Edi_Scm_Engine
  *
  * @ingroup Scm
  */
-Edi_Scm_Engine *edi_scm_init();
+EAPI Edi_Scm_Engine *edi_scm_init();
 
 /**
  * Init the SCM system for the specified path.
@@ -118,7 +118,7 @@ EAPI Edi_Scm_Engine *edi_scm_init_path(const char *path);
  *
  * @ingroup Scm
  */
-void edi_scm_shutdown();
+EAPI void edi_scm_shutdown();
 
 /**
  * Set up a new git repository for the current project.
@@ -160,7 +160,7 @@ EAPI int edi_scm_git_update(const char *dir);
  *
  * @ingroup Scm
  */
-Edi_Scm_Engine *edi_scm_engine_get(void);
+EAPI Edi_Scm_Engine *edi_scm_engine_get(void);
 
 /**
  * Stage file for commit with SCM.
@@ -170,7 +170,7 @@ Edi_Scm_Engine *edi_scm_engine_get(void);
  *
  * @ingroup Scm
  */
-int edi_scm_stage(const char *path);
+EAPI int edi_scm_stage(const char *path);
 
 /**
  * Unstage file from commit.
@@ -180,7 +180,7 @@ int edi_scm_stage(const char *path);
  *
  * @ingroup Scm
 */
-int edi_scm_unstage(const char *path);
+EAPI int edi_scm_unstage(const char *path);
 
 /**
  * Reset file changes to last commit state.
@@ -190,7 +190,7 @@ int edi_scm_unstage(const char *path);
  *
  * @ingroup Scm
 */
-int edi_scm_undo(const char *path);
+EAPI int edi_scm_undo(const char *path);
 
 /**
  * Del file from those monitored by SCM.
@@ -200,7 +200,7 @@ int edi_scm_undo(const char *path);
  *
  * @ingroup Scm
  */
-int edi_scm_del(const char *path);
+EAPI int edi_scm_del(const char *path);
 
 /**
  * Set commit message for next commit to SCM.
@@ -209,21 +209,21 @@ int edi_scm_del(const char *path);
  *
  * @ingroup Scm
  */
-void edi_scm_commit(const char *message);
+EAPI void edi_scm_commit(const char *message);
 
 /**
  * Get status of repository.
  *
  * @ingroup Scm
  */
-void edi_scm_status(void);
+EAPI void edi_scm_status(void);
 
 /**
  * Get log of repository.
  *
  * @ingroup Scm
  */
-Eina_List *edi_scm_log(void);
+EAPI Eina_List *edi_scm_log(void);
 
 /**
  *
@@ -234,14 +234,14 @@ Eina_List *edi_scm_log(void);
  *
  * @ingroup Scm
  */
-Edi_Scm_Status_Code edi_scm_file_status(const char *path);
+EAPI Edi_Scm_Status_Code edi_scm_file_status(const char *path);
 
 /**
  * Get status of repository.
  *
  * @return State whether a change was registered (true/false).
 */
-Eina_Bool edi_scm_status_get(void);
+EAPI Eina_Bool edi_scm_status_get(void);
 
 /**
  * Get diff of changes in repository.
@@ -250,7 +250,7 @@ Eina_Bool edi_scm_status_get(void);
  *
  * @return diff output as a string.
 */
-char *edi_scm_diff(Eina_Bool cached);
+EAPI char *edi_scm_diff(Eina_Bool cached);
 
 /**
  * Move from src to dest.
@@ -261,7 +261,7 @@ char *edi_scm_diff(Eina_Bool cached);
  * @return The status code of command executed.
  * @ingroup Scm
  */
-int edi_scm_move(const char *src, const char *dest);
+EAPI int edi_scm_move(const char *src, const char *dest);
 
 /**
  * Set user credentials for the SCM system.
@@ -273,28 +273,28 @@ int edi_scm_move(const char *src, const char *dest);
  *
  * @ingroup Scm
  */
-int edi_scm_credentials_set(const char *user, const char *email);
+EAPI int edi_scm_credentials_set(const char *user, const char *email);
 
 /**
  * Push to SCM remote repository.
  *
  * @ingroup Scm
  */
-void edi_scm_push(void);
+EAPI void edi_scm_push(void);
 
 /**
  * Pull from SCM remote repository.
  *
  * @ingroup Scm
  */
-void edi_scm_pull(void);
+EAPI void edi_scm_pull(void);
 
 /**
  * Stash local changes.
  *
  * @ingroup Scm
  */
-void edi_scm_stash(void);
+EAPI void edi_scm_stash(void);
 
 /**
  * Set remote url for SCM.
@@ -305,7 +305,7 @@ void edi_scm_stash(void);
  *
  * @ingroup Scm
  */
-int edi_scm_remote_add(const char *remote_url);
+EAPI int edi_scm_remote_add(const char *remote_url);
 
 /**
  * Test whether SCM is enabled for this project.
@@ -314,7 +314,7 @@ int edi_scm_remote_add(const char *remote_url);
  *
  * @ingroup Scm
  */
-Eina_Bool edi_scm_enabled(void);
+EAPI Eina_Bool edi_scm_enabled(void);
 
 /**
  * Test whether SCM has a remote enabled for this project.
@@ -323,7 +323,7 @@ Eina_Bool edi_scm_enabled(void);
  *
  * @ingroup Scm
  */
-Eina_Bool edi_scm_remote_enabled(void);
+EAPI Eina_Bool edi_scm_remote_enabled(void);
 
 /**
  * Get the URL to an avatar image for the user (based on email).
@@ -332,7 +332,7 @@ Eina_Bool edi_scm_remote_enabled(void);
  *
  * @ingroup Scm
  */
-const char *edi_scm_avatar_url_get(const char *email);
+EAPI const char *edi_scm_avatar_url_get(const char *email);
 
 
 /**
@@ -342,7 +342,7 @@ const char *edi_scm_avatar_url_get(const char *email);
  *
  * @ingroup Scm
  */
-const char *edi_scm_root_directory_get(void);
+EAPI const char *edi_scm_root_directory_get(void);
 
 /**
  * @}

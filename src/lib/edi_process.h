@@ -17,6 +17,33 @@
  */
 
 #include <Eina.h>
+
+#ifdef EAPI
+# undef EAPI
+#endif
+
+#ifdef _WIN32
+# ifdef EFL_EDI_BUILD
+#  ifdef DLL_EXPORT
+#   define EAPI __declspec(dllexport)
+#  else
+#   define EAPI
+#  endif /* ! DLL_EXPORT */
+# else
+#  define EAPI __declspec(dllimport)
+# endif /* ! EFL_EDI_BUILD */
+#else
+# ifdef __GNUC__
+#  if __GNUC__ >= 4
+#   define EAPI __attribute__ ((visibility("default")))
+#  else
+#   define EAPI
+#  endif
+# else
+#  define EAPI
+# endif
+#endif /* ! _WIN32 */
+
 #include <stdint.h>
 #include <unistd.h>
 
@@ -51,7 +78,7 @@ typedef struct _Edi_Proc_Stats
  *
  * @return Pointer to object containing the process information or NULL if non-existent.
  */
-Edi_Proc_Stats *edi_process_stats_by_pid(int pid);
+EAPI Edi_Proc_Stats *edi_process_stats_by_pid(int pid);
 
 
 /**
