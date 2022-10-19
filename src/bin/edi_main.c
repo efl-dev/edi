@@ -232,9 +232,9 @@ _edi_slide_panel_free(Elm_Transit_Effect *effect, Elm_Transit *transit EINA_UNUS
    slide = (Edi_Panel_Slide_Effect *) effect;
    if (!slide->expand)
      evas_object_hide(slide->content);
-   free(slide);
 
    _edi_panel_size_save(slide->left);
+   free(slide);
 }
 
 static void
